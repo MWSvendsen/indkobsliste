@@ -1,4 +1,23 @@
-import { addDays, dayName, mondayOf, shortDayLabel, weekDates } from './dates';
+import { addDays, dayName, mondayOf, plannedLabel, shortDayLabel, weekDates } from './dates';
+
+describe('plannedLabel', () => {
+  const today = '2026-11-25'; // onsdag
+
+  it('er tom, når retten ikke står på madplanen', () => {
+    expect(plannedLabel([], today)).toBe('');
+  });
+
+  it('nævner dagene i denne uge med navn og "og" til sidst', () => {
+    expect(plannedLabel(['2026-11-25', '2026-11-23'], today)).toBe('På madplanen mandag og onsdag');
+    expect(plannedLabel(['2026-11-23', '2026-11-24', '2026-11-27'], today)).toBe(
+      'På madplanen mandag, tirsdag og fredag',
+    );
+  });
+
+  it('giver dage i senere uger dato på og udelader tidligere uger', () => {
+    expect(plannedLabel(['2026-11-30', '2026-11-16'], today)).toBe('På madplanen man 30/11');
+  });
+});
 
 describe('datoer', () => {
   it('finder mandagen i ugen', () => {

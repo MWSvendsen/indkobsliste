@@ -5,10 +5,12 @@ import { AddItemSheet } from './screens/AddItemSheet';
 import { CatalogScreen } from './screens/CatalogScreen';
 import { ListScreen } from './screens/ListScreen';
 import { Placeholder } from './screens/Placeholder';
+import { RecipeEditor } from './screens/RecipeEditor';
+import { RecipesScreen } from './screens/RecipesScreen';
 import { Nav, type Tab } from './ui/Nav';
 import { ToastProvider } from './ui/toast';
 
-type SheetState = { type: 'add' } | null;
+type SheetState = { type: 'add' } | { type: 'editor'; recipeId: string | null } | null;
 
 export function App() {
   const [tab, setTab] = useState<Tab>('liste');
@@ -27,7 +29,7 @@ export function App() {
       {tab === 'liste' && <ListScreen />}
       {tab === 'varer' && <CatalogScreen />}
       {tab === 'madplan' && <Placeholder title="Madplan" milestone={6} />}
-      {tab === 'retter' && <Placeholder title="Retter" milestone={5} />}
+      {tab === 'retter' && <RecipesScreen onEdit={(recipeId) => setSheet({ type: 'editor', recipeId })} />}
 
       {!sheet && (tab === 'liste' || tab === 'varer') && (
         <button type="button" className="fab" onClick={() => setSheet({ type: 'add' })}>
@@ -39,6 +41,7 @@ export function App() {
       <Nav tab={tab} onChange={changeTab} badge={missing} />
 
       {sheet?.type === 'add' && <AddItemSheet onClose={closeSheet} />}
+      {sheet?.type === 'editor' && <RecipeEditor key={sheet.recipeId ?? 'ny'} recipeId={sheet.recipeId} onClose={closeSheet} />}
     </ToastProvider>
   );
 }

@@ -193,6 +193,159 @@ select {
   text-decoration: underline;
 }
 
+.screen--tight {
+  gap: 14px;
+}
+
+.screen--tight .screen__head {
+  margin-bottom: 4px;
+}
+
+.pill-btn--accent {
+  border: 0;
+  padding: 0 16px 0 12px;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  width: 100%;
+  min-height: 54px;
+  border-radius: 14px;
+  border: 0;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+}
+
+.link-btn--danger {
+  color: #a3271b;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+/* Ret-kort */
+.recipe {
+  padding: 10px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recipe__title {
+  margin: 0;
+}
+
+.recipe__head {
+  width: calc(100% + 16px);
+  margin: 0 -8px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+
+.recipe__name {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.recipe__edit {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.recipe__meta {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.recipe__planned {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-text);
+}
+
+/* Ret-editor */
+.field--soft input {
+  border: 1px solid var(--button-border);
+  font-weight: 600;
+}
+
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingredient {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 16px;
+  border-top: 1px solid var(--divider);
+}
+
+.card--list > .ingredient:first-child {
+  border-top: none;
+}
+
+.ingredient__name {
+  flex: 1 1 auto;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.dashed-note {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px dashed #a9a79e;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.confirm {
+  flex: none;
+  background: #fff;
+  border: 1px solid #e3c2bc;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.confirm__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.confirm__actions .btn-outline {
+  margin-top: 0;
+}
+
 .btn-danger {
   min-height: 52px;
   border-radius: 14px;
@@ -570,6 +723,11 @@ select {
 
 .sheet--compact {
   height: auto;
+}
+
+.sheet--tall {
+  height: min(790px, calc(100dvh - env(safe-area-inset-top) - 20px));
+  gap: 12px;
 }
 
 .sheet--compact .sheet__body {

@@ -38,6 +38,23 @@ const weekdayIndex = (date: ISODate) => (fromISODate(date).getDay() + 6) % 7;
 /** Fx "Mandag" */
 export const dayName = (date: ISODate): string => LONG[weekdayIndex(date)]!;
 
+/**
+ * Hvornår en ret står på madplanen, fx "På madplanen mandag og onsdag".
+ * Kun dage fra denne uges mandag og frem. Dage i en senere uge får dato på, fx "man 30/11".
+ * Returnerer '' hvis retten ikke står på madplanen.
+ */
+export function plannedLabel(dates: ISODate[], today: ISODate): string {
+  const monday = mondayOf(today);
+  const sunday = addDays(monday, 6);
+  const parts = dates
+    .filter((d) => d >= monday)
+    .sort()
+    .map((d) => (d <= sunday ? dayName(d).toLowerCase() : shortDayLabel(d).toLowerCase()));
+  if (parts.length === 0) return '';
+  const list = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(', ')} og ${parts.at(-1)}`;
+  return `På madplanen ${list}`;
+}
+
 /** Fx "Man 23/11", som i prototypen */
 export function shortDayLabel(date: ISODate): string {
   const d = fromISODate(date);

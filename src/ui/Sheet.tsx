@@ -11,10 +11,13 @@ interface SheetProps {
   footer?: ReactNode;
   /** Lavt ark, der kun er så højt som indholdet, fx til en bekræftelse. */
   compact?: boolean;
+  /** Højt ark til editoren. */
+  tall?: boolean;
 }
 
 /** Bundark med baggrundslag. Escape, tryk på baggrunden og krydset lukker. */
-export function Sheet({ title, eyebrow, onClose, children, footer, compact }: SheetProps) {
+export function Sheet({ title, eyebrow, onClose, children, footer, compact, tall }: SheetProps) {
+  const className = ['sheet', compact && 'sheet--compact', tall && 'sheet--tall'].filter(Boolean).join(' ');
   const titleId = useId();
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export function Sheet({ title, eyebrow, onClose, children, footer, compact }: Sh
   return (
     <div className="sheet-layer">
       <button type="button" className="sheet-scrim" aria-label="Luk" tabIndex={-1} onClick={onClose} />
-      <section className={compact ? 'sheet sheet--compact' : 'sheet'} role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <section className={className} role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <span className="sheet__handle" aria-hidden="true" />
         <header className="sheet__header">
           <div>
