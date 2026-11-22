@@ -63,3 +63,32 @@ select {
 .card p {
   margin: 0;
 }
+
+.muted {
+  color: var(--muted);
+}
+
+.zones {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.zones li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  border-top: 1px solid var(--divider);
+}
+
+.zones li:first-child {
+  border-top: none;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}

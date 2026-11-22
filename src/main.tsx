@@ -9,12 +9,17 @@ import '@fontsource/bricolage-grotesque/latin-700.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import { App } from './App';
+import { initDatabase } from './data/bootstrap';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Mangler #root');
 
-createRoot(root).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+initDatabase()
+  .catch((err: unknown) => console.error('Databasen kunne ikke startes', err))
+  .finally(() => {
+    createRoot(root).render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    );
+  });
