@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { CalendarDays, Plus } from 'lucide-react';
 import { useItems, useMealPlan, useRecipeIngredients, useRecipes } from '../data/hooks';
 import { byName } from '../domain/common';
 import { plannedLabel, toISODate } from '../domain/dates';
@@ -6,10 +6,12 @@ import { plannedLabel, toISODate } from '../domain/dates';
 interface Props {
   /** null = ny ret */
   onEdit: (recipeId: string | null) => void;
+  /** "Sæt på madplanen": vælg dag og derefter ingredienser. */
+  onPlan: (recipeId: string) => void;
 }
 
 /** Retter: retkataloget med ingredienser og hvilke dage, retten står på madplanen. */
-export function RecipesScreen({ onEdit }: Props) {
+export function RecipesScreen({ onEdit, onPlan }: Props) {
   const recipes = useRecipes();
   const ingredients = useRecipeIngredients();
   const items = useItems();
@@ -69,6 +71,15 @@ export function RecipesScreen({ onEdit }: Props) {
               {names.length} ingredienser · {names.join(', ')}
             </p>
             {planned && <p className="recipe__planned">{planned}</p>}
+            <button
+              type="button"
+              className="btn-outline btn-outline--sm btn-icon"
+              aria-label={`Sæt ${recipe.name} på madplanen`}
+              onClick={() => onPlan(recipe.id)}
+            >
+              <CalendarDays size={18} strokeWidth={2} aria-hidden="true" />
+              Sæt på madplanen
+            </button>
           </article>
         );
       })}

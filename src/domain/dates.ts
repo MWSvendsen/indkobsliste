@@ -30,6 +30,24 @@ export function weekDates(monday: ISODate): ISODate[] {
   return Array.from({ length: 7 }, (_, k) => addDays(monday, k));
 }
 
+/** Ugenummer efter ISO 8601, som bruges i Danmark. */
+export function isoWeek(date: ISODate): number {
+  const [y, m, d] = date.split('-').map(Number);
+  const utc = Date.UTC(y!, m! - 1, d!);
+  const weekday = (new Date(utc).getUTCDay() + 6) % 7;
+  const thursday = new Date(utc + (3 - weekday) * 86_400_000);
+  const jan1 = Date.UTC(thursday.getUTCFullYear(), 0, 1);
+  return 1 + Math.floor((thursday.getTime() - jan1) / (7 * 86_400_000));
+}
+
+/** De næste dage fra i dag til og med søndag i næste uge. Bruges til "Sæt på madplanen". */
+export function upcomingDates(today: ISODate): ISODate[] {
+  const end = addDays(mondayOf(today), 13);
+  const out: ISODate[] = [];
+  for (let d = today; d <= end; d = addDays(d, 1)) out.push(d);
+  return out;
+}
+
 const LONG = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
 const SHORT = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
 

@@ -1,4 +1,23 @@
-import { addDays, dayName, mondayOf, plannedLabel, shortDayLabel, weekDates } from './dates';
+import { addDays, dayName, isoWeek, mondayOf, plannedLabel, shortDayLabel, upcomingDates, weekDates } from './dates';
+
+describe('ugenummer', () => {
+  it('følger ISO 8601', () => {
+    expect(isoWeek('2026-11-23')).toBe(48);
+    expect(isoWeek('2026-11-29')).toBe(48);
+    expect(isoWeek('2027-01-01')).toBe(53); // fredag hører til uge 53 i 2026
+    expect(isoWeek('2027-01-04')).toBe(1);
+    expect(isoWeek('2025-12-29')).toBe(1); // mandag hører til uge 1 i 2026
+  });
+});
+
+describe('kommende dage', () => {
+  it('går fra i dag til søndag i næste uge', () => {
+    const days = upcomingDates('2026-11-25'); // onsdag
+    expect(days[0]).toBe('2026-11-25');
+    expect(days.at(-1)).toBe('2026-12-06');
+    expect(days).toHaveLength(12);
+  });
+});
 
 describe('plannedLabel', () => {
   const today = '2026-11-25'; // onsdag

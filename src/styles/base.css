@@ -232,6 +232,229 @@ select {
   text-decoration: none;
 }
 
+.btn-outline--sm {
+  margin-top: 0;
+  min-height: 46px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.recipe .btn-outline--sm {
+  margin-top: 6px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-plain {
+  min-height: 46px;
+  border-radius: 12px;
+  border: 1px solid var(--button-border);
+  background: #fff;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.soft-btn {
+  flex: none;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: #e6e4dc;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dashed-btn {
+  min-height: 48px;
+  border-radius: 12px;
+  border: 1px dashed #a9a79e;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.icon-btn--card {
+  background: #fff;
+  border: 1px solid var(--button-border);
+}
+
+.icon-btn:disabled {
+  opacity: 0.35;
+}
+
+.week-nav {
+  display: flex;
+  gap: 8px;
+}
+
+/* Madplan */
+.day {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day__label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.day__today {
+  color: var(--green-text);
+}
+
+.day__dish {
+  margin: -4px -8px 0;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.day__chev {
+  color: var(--muted);
+  flex: none;
+}
+
+.day__ing {
+  margin: -4px 0 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.day__done {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.day__ok {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.day__done .soft-btn {
+  background: #efede6;
+}
+
+/* Bundark til madplanen */
+.sheet__row-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 8px;
+  flex: none;
+}
+
+.tick {
+  color: var(--green-text-2);
+  flex: none;
+}
+
+.day-row {
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.day-row__label {
+  width: 92px;
+  flex: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.day-row__dish {
+  flex: 1 1 auto;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.day-row__dish--free {
+  color: var(--green-text);
+}
+
+.ing-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ing-intro .lead {
+  margin: 0;
+}
+
+.pick-row {
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.pick-row__qty {
+  flex: none;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.box {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 7px;
+  border: 2px solid #9e9c93;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box--on {
+  border: 0;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
 /* Ret-kort */
 .recipe {
   padding: 10px 16px 16px;
