@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useListEntries } from './data/hooks';
 import { AddItemSheet } from './screens/AddItemSheet';
+import { CatalogScreen } from './screens/CatalogScreen';
 import { ListScreen } from './screens/ListScreen';
 import { Placeholder } from './screens/Placeholder';
 import { Nav, type Tab } from './ui/Nav';
@@ -24,7 +25,7 @@ export function App() {
   return (
     <ToastProvider>
       {tab === 'liste' && <ListScreen />}
-      {tab === 'varer' && <Placeholder title="Varer" milestone={4} />}
+      {tab === 'varer' && <CatalogScreen />}
       {tab === 'madplan' && <Placeholder title="Madplan" milestone={6} />}
       {tab === 'retter' && <Placeholder title="Retter" milestone={5} />}
 

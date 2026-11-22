@@ -152,6 +152,57 @@ select {
   justify-content: center;
 }
 
+.screen__head--row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lead {
+  margin: -8px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.sheet .lead {
+  margin: 0;
+}
+
+.pill-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 22px;
+  border: 1px solid var(--button-border);
+  background: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  flex: none;
+}
+
+.link-btn {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.btn-danger {
+  min-height: 52px;
+  border-radius: 14px;
+  border: 0;
+  background: #a3321f;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 /* ---------- Statusfelt ---------- */
 
 .hero {
@@ -226,6 +277,12 @@ select {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.group__head--start {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
 }
 
 .group__name {
@@ -511,6 +568,24 @@ select {
   flex: none;
 }
 
+.sheet--compact {
+  height: auto;
+}
+
+.sheet--compact .sheet__body {
+  flex: none;
+}
+
+.sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sheet__actions .btn-outline {
+  margin-top: 0;
+}
+
 /* ---------- Tilføj vare ---------- */
 
 .field {
@@ -682,6 +757,87 @@ select {
   padding: 0 14px;
   background: var(--bg);
   font-size: 14px;
+}
+
+.chip--item {
+  padding: 0 16px;
+}
+
+/* Vare på listen i kataloget */
+.pill-on {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.pill-on__btn {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill-on__text {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Ret rute */
+.route__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 0 8px 0 16px;
+  border-top: 1px solid var(--divider);
+}
+
+.route > .route__row:first-child {
+  border-top: none;
+}
+
+.route__n {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 14px;
+  background: #eae8e1;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route__name {
+  flex: 1 1 auto;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.route__btn {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route__btn:disabled {
+  opacity: 0.3;
 }
 
 .chip__plus {

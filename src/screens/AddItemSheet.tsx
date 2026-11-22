@@ -2,13 +2,12 @@ import { Plus } from 'lucide-react';
 import { useState, type KeyboardEvent } from 'react';
 import { db } from '../data/db';
 import { useItems, useListEntries, useZones } from '../data/hooks';
-import type { Item } from '../data/types';
 import { createItemOnList } from '../domain/catalog';
 import { capitalize } from '../domain/common';
-import { addToList, setQuantity } from '../domain/list';
 import { frequentItems, hasExactItem, searchItems } from '../domain/views';
 import { QuantityStepper } from '../ui/QuantityStepper';
 import { Sheet } from '../ui/Sheet';
+import { useListActions } from '../ui/useListActions';
 import { useRun } from '../ui/useToast';
 
 /** Tilføj vare: søg, tryk for at sætte på listen, eller opret en ny vare med område. */
@@ -25,9 +24,7 @@ export function AddItemSheet({ onClose }: { onClose: () => void }) {
   const zoneName = new Map(zones.map((z) => [z.id, z.name]));
   const pretty = capitalize(q);
 
-  const add = (item: Item) =>
-    run(() => addToList(db, [{ itemId: item.id, quantity: 1 }]), () => `${item.name} er på listen`);
-  const setQty = (item: Item, quantity: number) => run(() => setQuantity(db, item.id, quantity));
+  const { add, setQty } = useListActions();
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
