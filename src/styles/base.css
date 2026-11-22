@@ -297,6 +297,25 @@ select {
   gap: 8px;
 }
 
+/* Backup */
+.backup {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.backup .hint {
+  padding: 0 4px;
+}
+
+.backup__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+
 /* Madplan */
 .day {
   padding: 14px 16px 16px;

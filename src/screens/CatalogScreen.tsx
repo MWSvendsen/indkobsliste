@@ -8,6 +8,7 @@ import { zoneColor } from '../data/zoneColors';
 import { moveZone } from '../domain/catalog';
 import { byName } from '../domain/common';
 import { Sheet } from '../ui/Sheet';
+import { BackupSection } from './BackupSection';
 import { useListActions } from '../ui/useListActions';
 import { useRun } from '../ui/useToast';
 
@@ -57,6 +58,7 @@ export function CatalogScreen() {
               </section>
             );
           })}
+          <BackupSection />
           <button type="button" className="link-btn" onClick={() => setConfirmReset(true)}>
             Nulstil til eksempeldata
           </button>

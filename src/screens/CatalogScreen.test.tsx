@@ -4,6 +4,7 @@ import { App } from '../App';
 import { initDatabase } from '../data/bootstrap';
 import { db, isActive } from '../data/db';
 import { resetToSeed } from '../data/seed';
+import { exportData } from '../domain/backup';
 
 async function openCatalog() {
   await initDatabase();
@@ -62,6 +63,29 @@ describe('Varer', () => {
     await user.click(screen.getByRole('button', { name: 'Færdig' }));
     const headings = (await screen.findAllByRole('heading', { level: 2 })).map((h) => h.textContent);
     expect(headings.slice(0, 2)).toEqual(['Brød', 'Frugt & grønt']);
+  });
+
+  it('importerer en backup efter bekræftelse og afviser en forkert fil', async () => {
+    const user = await openCatalog();
+    // Lav en backup med Ost på listen, og tøm så listen igen
+    const mejeri = await zoneSection('Mejeri');
+    await user.click(await within(mejeri).findByRole('button', { name: 'Sæt Ost på listen' }));
+    expect(await screen.findByText('1 på listen')).toBeInTheDocument();
+    const backup = await exportData(db);
+    await user.click(within(mejeri).getByRole('button', { name: 'Fjern Ost fra listen' }));
+    expect(await screen.findByText('0 på listen')).toBeInTheDocument();
+
+    const input = screen.getByLabelText('Vælg backup-fil');
+    await user.upload(input, new File(['ikke json'], 'forkert.json', { type: 'application/json' }));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Filen er ikke gyldig JSON.'));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await user.upload(input, new File([JSON.stringify(backup)], 'backup.json', { type: 'application/json' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Importér data?' });
+    expect(dialog).toHaveTextContent('46 varer, 7 retter og 1 linje på listen');
+    await user.click(within(dialog).getByRole('button', { name: 'Erstat med backup' }));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Data er importeret'));
+    expect(await screen.findByText('1 på listen')).toBeInTheDocument();
   });
 
   it('nulstiller til eksempeldata efter bekræftelse', async () => {

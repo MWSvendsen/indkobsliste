@@ -14,7 +14,15 @@ npm run dev
 | `npm run dev` | Udviklingsserver |
 | `npm test` | Vitest |
 | `npm run lint` | ESLint |
-| `npm run build` | Typetjek og produktionsbuild til `dist/` |
+| `npm run build` | Typetjek og produktionsbuild til `dist/` med service worker |
+| `npm run preview` | Kør produktionsbuildet lokalt, fx for at teste offline |
+| `npm run icons` | Lav ikonerne i `public/` igen ud fra `public/icon.svg` |
+
+## Offline og data
+
+Appen er en PWA: alt ligger i service workerens precache, så den virker uden netværk efter første besøg. En ny version hentes i baggrunden og tages i brug ved næste opstart.
+
+Data ligger kun i telefonens IndexedDB. Under Varer → Backup kan de eksporteres og importeres som JSON. Indtil der er sync, er det den eneste backup.
 
 ## Deploy
 

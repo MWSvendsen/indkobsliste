@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#16201B"/>
+  <!-- Indholdet holder sig inden for den sikre cirkel (80 %), så det også virker som maskable-ikon -->
+  <g stroke-linecap="round" stroke-linejoin="round" transform="translate(256 256) scale(1.2) translate(-244 -264)">
+    <circle cx="170" cy="176" r="36" fill="#C6F36B"/>
+    <path d="M153 177l12 12 23-25" fill="none" stroke="#16201B" stroke-width="12"/>
+    <path d="M236 176h118" stroke="#C6F36B" stroke-width="28"/>
+    <circle cx="170" cy="266" r="30" fill="none" stroke="#A9B3AC" stroke-width="10"/>
+    <path d="M236 266h118" stroke="#F2F2ED" stroke-width="28"/>
+    <circle cx="170" cy="352" r="30" fill="none" stroke="#A9B3AC" stroke-width="10"/>
+    <path d="M236 352h84" stroke="#F2F2ED" stroke-width="28"/>
+  </g>
+</svg>
