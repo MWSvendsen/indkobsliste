@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<title>Indkøbsliste</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:default}
+input{font-family:inherit}
+a{color:#1F6B4A}a:hover{color:#17533A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: #F2F2ED; color: #16201B; font-family: Inter, system-ui, sans-serif">
+
+<div style="flex: 1 1 auto; min-height: 0; overflow-y: auto">
+
+<sc-if value="{{ isListe }}" hint-placeholder-val="{{ true }}">
+<div style="padding: 28px 20px 190px; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5D6259; letter-spacing: 0.04em; text-transform: uppercase">Netto · din rute</p>
+<h1 style="margin: 4px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05">Indkøb</h1>
+</div>
+<div style="border-radius: 24px; background: #16201B; color: #FFFFFF; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 10px 28px rgba(22, 32, 27, 0.18)">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<p style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 46px; font-weight: 700; letter-spacing: -0.03em; line-height: 1">{{ cartCount }}<span style="font-size: 22px; font-weight: 600; color: #A9B3AC"> / {{ onListCount }}</span></p>
+<p style="margin: 0 0 4px; font-size: 14px; font-weight: 600; color: #C9D1CB">{{ heroLabel }}</p>
+</div>
+<div style="height: 10px; border-radius: 5px; background: rgba(255, 255, 255, 0.12); overflow: hidden">
+<div style="height: 10px; border-radius: 5px; background: {{ accent }}; width: {{ pct }}%"></div>
+</div>
+</div>
+</div>
+
+<sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); padding: 28px 20px; display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Listen er tom</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.45; color: #5D6259">Tryk på Tilføj, når I løber tør for noget, eller vælg ingredienser til ugens retter i madplanen.</p>
+</div>
+</sc-if>
+
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; padding: 0 4px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5D6259"><span style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; background: {{ g.dot }}"></span>{{ g.name }}</span><span>{{ g.count }}</span></h2>
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden">
+<sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="2">
+<button onClick="{{ r.toggle }}" aria-label="{{ r.label }}" style="width: 100%; min-height: 58px; display: flex; align-items: center; gap: 14px; padding: 0 16px; background: transparent; border: 0; border-top: {{ r.border }}; text-align: left; font-size: 17px; font-weight: 500; color: #16201B">
+<span aria-hidden="true" style="width: 26px; height: 26px; flex: none; box-sizing: border-box; border-radius: 13px; border: 2px solid #9E9C93"></span>
+<span style="flex: 1 1 auto">{{ r.name }}</span>
+<sc-if value="{{ r.hasQty }}" hint-placeholder-val="{{ false }}">
+<span style="flex: none; min-width: 40px; height: 30px; padding: 0 10px; box-sizing: border-box; border-radius: 15px; background: #16201B; color: #FFFFFF; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ r.qtyLabel }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+<sc-if value="{{ hasCart }}" hint-placeholder-val="{{ true }}">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; padding: 0 4px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5D6259"><span>I kurven</span><span>{{ cartCount }}</span></h2>
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden">
+<sc-for list="{{ cart }}" as="r" hint-placeholder-count="2">
+<button onClick="{{ r.toggle }}" aria-label="{{ r.label }}" style="width: 100%; min-height: 52px; display: flex; align-items: center; gap: 14px; padding: 0 16px; background: transparent; border: 0; border-top: {{ r.border }}; text-align: left; font-size: 16px; color: #686C63">
+<span aria-hidden="true" style="width: 26px; height: 26px; flex: none; border-radius: 13px; background: {{ accent }}; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="flex: 1 1 auto; text-decoration: line-through">{{ r.name }}</span>
+<sc-if value="{{ r.hasQty }}" hint-placeholder-val="{{ false }}">
+<span style="flex: none; font-size: 15px; font-weight: 600">{{ r.qtyLabel }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+<button onClick="{{ finish }}" style="margin-top: 6px; min-height: 52px; border-radius: 14px; border: 2px solid #16201B; background: transparent; color: #16201B; font-size: 16px; font-weight: 600">Afslut indkøb</button>
+<p style="margin: 0; padding: 0 4px; font-size: 13px; line-height: 1.4; color: #5D6259">Varerne i kurven ryger tilbage i kataloget, klar til næste gang.</p>
+</section>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isVarer }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 28px 20px 190px; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div>
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5D6259; letter-spacing: 0.04em; text-transform: uppercase">{{ onListCount }} på listen</p>
+<h1 style="margin: 4px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05">Varer</h1>
+</div>
+<button onClick="{{ toggleReorder }}" style="min-height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid #DEDDD5; background: #FFFFFF; color: #16201B; font-size: 15px; font-weight: 600">{{ reorderLabel }}</button>
+</div>
+
+<sc-if value="{{ browse }}" hint-placeholder-val="{{ true }}">
+<p style="margin: -8px 0 0; font-size: 15px; line-height: 1.45; color: #5D6259">Tryk på det, I mangler. Brug plus og minus til at rette antallet.</p>
+<sc-for list="{{ catalog }}" as="g" hint-placeholder-count="3">
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; padding: 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #5D6259; display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; background: {{ g.dot }}"></span>{{ g.name }}</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ g.chips }}" as="c" hint-placeholder-count="4">
+<sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; height: 44px; border-radius: 22px; background: {{ accent }}; color: {{ onAccent }}">
+<button onClick="{{ c.dec }}" aria-label="{{ c.decLabel }}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span style="font-size: 15px; font-weight: 600; white-space: nowrap">{{ c.qty }} × {{ c.name }}</span>
+<button onClick="{{ c.inc }}" aria-label="{{ c.incLabel }}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+</sc-if>
+<sc-if value="{{ c.off }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ c.add }}" aria-label="{{ c.addLabel }}" style="min-height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid #DEDDD5; background: #FFFFFF; color: #16201B; font-size: 15px; font-weight: 500">{{ c.name }}</button>
+</sc-if>
+</sc-for>
+</div>
+</section>
+</sc-for>
+<button onClick="{{ resetData }}" style="align-self: flex-start; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #5D6259; font-size: 14px; font-weight: 600; text-decoration: underline">Nulstil til eksempeldata</button>
+</sc-if>
+
+<sc-if value="{{ reorder }}" hint-placeholder-val="{{ false }}">
+<p style="margin: -8px 0 0; font-size: 15px; line-height: 1.45; color: #5D6259">Sæt områderne i den rækkefølge, du møder dem i din Netto. Listen følger rækkefølgen.</p>
+<ol style="margin: 0; padding: 0; list-style: none; background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden">
+<sc-for list="{{ route }}" as="r" hint-placeholder-count="8">
+<li style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 8px 0 16px; border-top: {{ r.border }}">
+<span style="width: 28px; height: 28px; flex: none; border-radius: 14px; background: #EAE8E1; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ r.n }}</span>
+<span style="flex: 1 1 auto; font-size: 17px; font-weight: 500">{{ r.name }}</span>
+<button onClick="{{ r.up }}" disabled="{{ r.noUp }}" aria-label="{{ r.upLabel }}" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: transparent; color: #16201B; opacity: {{ r.upOpacity }}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>
+<button onClick="{{ r.down }}" disabled="{{ r.noDown }}" aria-label="{{ r.downLabel }}" style="width: 44px; height: 44px; border: 0; border-radius: 12px; background: transparent; color: #16201B; opacity: {{ r.downOpacity }}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg></button>
+</li>
+</sc-for>
+</ol>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isMadplan }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 28px 20px 190px; display: flex; flex-direction: column; gap: 14px">
+<div style="margin-bottom: 4px">
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5D6259; letter-spacing: 0.04em; text-transform: uppercase">Uge 48</p>
+<h1 style="margin: 4px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05">Madplan</h1>
+</div>
+<sc-for list="{{ days }}" as="d" hint-placeholder-count="4">
+<article style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #5D6259">{{ d.short }}</p>
+<sc-if value="{{ d.has }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ d.changeDish }}" aria-label="{{ d.changeLabel }}" style="margin: -4px -8px 0; min-height: 44px; padding: 0 8px; border: 0; border-radius: 10px; background: transparent; color: #16201B; display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; font-size: 19px; font-weight: 700"><span>{{ d.dish }}</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5D6259" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+<p style="margin: -4px 0 4px; font-size: 14px; line-height: 1.4; color: #5D6259">{{ d.ingNames }}</p>
+<sc-if value="{{ d.notAdded }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ d.chooseIng }}" style="min-height: 46px; border-radius: 12px; border: 2px solid #16201B; background: transparent; color: #16201B; font-size: 15px; font-weight: 600">Vælg ingredienser</button>
+</sc-if>
+<sc-if value="{{ d.added }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-size: 14px; font-weight: 600; color: #17533A; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Ingredienser er valgt</span>
+<button onClick="{{ d.chooseIng }}" style="min-height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: #EFEDE6; color: #16201B; font-size: 14px; font-weight: 600">Vælg igen</button>
+</div>
+</sc-if>
+</sc-if>
+<sc-if value="{{ d.none }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ d.changeDish }}" aria-label="{{ d.addLabel }}" style="min-height: 48px; border-radius: 12px; border: 1px dashed #A9A79E; background: transparent; color: #16201B; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Tilføj ret</button>
+</sc-if>
+</article>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRetter }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 28px 20px 190px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 4px">
+<div>
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5D6259; letter-spacing: 0.04em; text-transform: uppercase">{{ recipeCount }} retter</p>
+<h1 style="margin: 4px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05">Retter</h1>
+</div>
+<button onClick="{{ newRecipe }}" style="min-height: 44px; padding: 0 16px 0 12px; border-radius: 22px; border: 0; background: {{ accent }}; color: {{ onAccent }}; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Ny ret</button>
+</div>
+<sc-for list="{{ recipeCards }}" as="r" hint-placeholder-count="4">
+<article style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); padding: 10px 16px 16px; display: flex; flex-direction: column; gap: 6px">
+<button onClick="{{ r.edit }}" aria-label="{{ r.editLabel }}" style="margin: 0 -8px; min-height: 44px; padding: 0 8px; border: 0; border-radius: 10px; background: transparent; color: #16201B; display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left"><span style="font-size: 19px; font-weight: 700">{{ r.name }}</span><span style="font-size: 14px; font-weight: 600; color: #5D6259">Rediger</span></button>
+<p style="margin: 0; font-size: 14px; line-height: 1.4; color: #5D6259">{{ r.ingNames }}</p>
+<sc-if value="{{ r.isUsed }}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: #17533A">{{ r.usedLabel }}</p>
+</sc-if>
+<button onClick="{{ r.plan }}" aria-label="{{ r.planLabel }}" style="margin-top: 6px; min-height: 46px; border-radius: 12px; border: 2px solid #16201B; background: transparent; color: #16201B; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>Sæt på madplanen</button>
+</article>
+</sc-for>
+</div>
+</sc-if>
+
+</div>
+
+<nav aria-label="Hovedmenu" style="position: absolute; left: 14px; right: 14px; bottom: 18px; height: 68px; box-sizing: border-box; padding: 6px; border-radius: 26px; background: #16201B; box-shadow: 0 12px 32px rgba(22, 32, 27, 0.3); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px">
+<button onClick="{{ goListe }}" style="border: 0; border-radius: 20px; background: {{ bgListe }}; color: {{ cListe }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600; position: relative">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"></path></svg>
+<span>Liste</span>
+<sc-if value="{{ hasBadge }}" hint-placeholder-val="{{ true }}">
+<span style="position: absolute; top: 2px; left: calc(50% + 6px); min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 10px; background: #FFFFFF; color: #16201B; font-size: 11px; box-shadow: 0 0 0 2px #16201B; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ badge }}</span>
+</sc-if>
+</button>
+<button onClick="{{ goVarer }}" style="border: 0; border-radius: 20px; background: {{ bgVarer }}; color: {{ cVarer }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg>
+<span>Varer</span>
+</button>
+<button onClick="{{ goMadplan }}" style="border: 0; border-radius: 20px; background: {{ bgMadplan }}; color: {{ cMadplan }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span>Madplan</span>
+</button>
+<button onClick="{{ goRetter }}" style="border: 0; border-radius: 20px; background: {{ bgRetter }}; color: {{ cRetter }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 12px; font-weight: 600">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16a8 8 0 0 1-16 0z"></path><path d="M9 7c0-1.5 1-2 1-3.5M13 7c0-1.5 1-2 1-3.5"></path></svg>
+<span>Retter</span>
+</button>
+</nav>
+
+<sc-if value="{{ showFab }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ openAdd }}" style="position: absolute; right: 20px; bottom: 104px; height: 58px; padding: 0 24px 0 18px; border: 0; border-radius: 29px; background: {{ accent }}; color: {{ onAccent }}; font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(27, 30, 26, 0.28)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Tilføj</button>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<p role="status" style="position: absolute; left: 20px; right: 20px; bottom: 178px; margin: 0; padding: 14px 16px; border-radius: 12px; background: #16201B; color: #FFFFFF; font-size: 15px; font-weight: 500; text-align: center; box-shadow: 0 8px 24px rgba(27, 30, 26, 0.25); z-index: 5">{{ toast }}</p>
+</sc-if>
+
+<sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end">
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="position: absolute; inset: 0; border: 0; background: rgba(20, 22, 18, 0.42)"></button>
+<section aria-label="Tilføj vare" style="position: relative; height: 640px; box-sizing: border-box; padding: 10px 20px 28px; border-radius: 28px 28px 0 0; background: #F2F2ED; display: flex; flex-direction: column; gap: 16px; overflow-y: auto">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #CFCDC4; flex: none"></span>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Tilføj vare</h2>
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: #E6E4DC; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="vare-soeg" style="font-size: 14px; font-weight: 600; color: #5D6259">Hvad mangler I?</label>
+<input id="vare-soeg" type="search" autocomplete="off" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onKey }}" placeholder="Fx mælk, kaffe, løg" style="height: 54px; box-sizing: border-box; padding: 0 16px; border-radius: 14px; border: 2px solid #16201B; background: #FFFFFF; color: #16201B; font-size: 17px; outline: none">
+</div>
+
+<sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden; flex: none">
+<sc-for list="{{ resultRows }}" as="r" hint-placeholder-count="3">
+<sc-if value="{{ r.off }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ r.add }}" aria-label="{{ r.addLabel }}" style="width: 100%; min-height: 60px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border: 0; border-top: {{ r.border }}; background: transparent; text-align: left; color: #16201B">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 17px; font-weight: 500">{{ r.name }}</span><span style="font-size: 13px; color: #5D6259">{{ r.zone }}</span></span>
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: {{ accent }}; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span>
+</button>
+</sc-if>
+<sc-if value="{{ r.on }}" hint-placeholder-val="{{ false }}">
+<div style="min-height: 60px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 16px; border-top: {{ r.border }}">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 17px; font-weight: 500">{{ r.name }}</span><span style="font-size: 13px; font-weight: 600; color: #17533A">På listen</span></span>
+<button onClick="{{ r.dec }}" aria-label="{{ r.decLabel }}" style="width: 44px; height: 44px; border: 1px solid #DEDDD5; border-radius: 22px; background: #FFFFFF; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span style="min-width: 26px; text-align: center; font-size: 17px; font-weight: 700">{{ r.qty }}</span>
+<button onClick="{{ r.inc }}" aria-label="{{ r.incLabel }}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: {{ accent }}; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+</sc-if>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ showCreate }}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px dashed #A9A79E; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: none">
+<p style="margin: 0; font-size: 17px; font-weight: 600">Ny vare: {{ pretty }}</p>
+<p style="margin: 0; font-size: 14px; line-height: 1.4; color: #5D6259">Vælg område, så den lander det rigtige sted på ruten.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{ zoneChips }}" as="z" hint-placeholder-count="6">
+<button onClick="{{ z.pick }}" style="min-height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid #DEDDD5; background: #F2F2ED; color: #16201B; font-size: 14px; font-weight: 500">{{ z.name }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ noQuery }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: #5D6259">Det køber I tit</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="8">
+<button onClick="{{ s.act }}" aria-label="{{ s.label }}" style="min-height: 44px; padding: 0 16px 0 12px; border-radius: 22px; border: 1px solid #DEDDD5; background: #FFFFFF; color: #16201B; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ accentText }}" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{ s.name }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ pickRecipeOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end">
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="position: absolute; inset: 0; border: 0; background: rgba(20, 22, 18, 0.42)"></button>
+<section aria-label="Vælg ret" style="position: relative; max-height: 760px; box-sizing: border-box; padding: 10px 20px 28px; border-radius: 28px 28px 0 0; background: #F2F2ED; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #CFCDC4; flex: none"></span>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700">{{ pickRecipeTitle }}</h2>
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: #E6E4DC; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden; flex: none">
+<sc-for list="{{ recipeRows }}" as="r" hint-placeholder-count="5">
+<button onClick="{{ r.act }}" style="width: 100%; min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border: 0; border-top: {{ r.border }}; background: transparent; text-align: left; color: #16201B">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 17px; font-weight: 500">{{ r.name }}</span><span style="font-size: 13px; color: #5D6259">{{ r.meta }}</span></span>
+<sc-if value="{{ r.sel }}" hint-placeholder-val="{{ false }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ accentText }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+</sc-if>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 8px; flex: none">
+<button onClick="{{ newRecipeForDay }}" style="flex: 1 1 0; min-height: 48px; border-radius: 12px; border: 2px solid #16201B; background: transparent; color: #16201B; font-size: 15px; font-weight: 600">Ny ret</button>
+<button onClick="{{ clearRecipe }}" style="flex: 1 1 0; min-height: 48px; border-radius: 12px; border: 1px solid #DEDDD5; background: #FFFFFF; color: #16201B; font-size: 15px; font-weight: 500">Ingen ret</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ pickDayOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end">
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="position: absolute; inset: 0; border: 0; background: rgba(20, 22, 18, 0.42)"></button>
+<section aria-label="Vælg dag" style="position: relative; box-sizing: border-box; padding: 10px 20px 28px; border-radius: 28px 28px 0 0; background: #F2F2ED; display: flex; flex-direction: column; gap: 14px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #CFCDC4"></span>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<div>
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5D6259">Hvilken dag?</p>
+<h2 style="margin: 2px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700">{{ pickDayTitle }}</h2>
+</div>
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: #E6E4DC; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden">
+<sc-for list="{{ dayRows }}" as="r" hint-placeholder-count="7">
+<button onClick="{{ r.act }}" style="width: 100%; min-height: 54px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border: 0; border-top: {{ r.border }}; background: transparent; text-align: left; color: #16201B">
+<span style="width: 92px; flex: none; font-size: 16px; font-weight: 600">{{ r.label }}</span>
+<span style="flex: 1 1 auto; font-size: 15px; color: {{ r.dishColor }}">{{ r.dish }}</span>
+</button>
+</sc-for>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ ingOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end">
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="position: absolute; inset: 0; border: 0; background: rgba(20, 22, 18, 0.42)"></button>
+<section aria-label="Vælg ingredienser" style="position: relative; max-height: 780px; box-sizing: border-box; padding: 10px 20px 28px; border-radius: 28px 28px 0 0; background: #F2F2ED; display: flex; flex-direction: column; gap: 14px; overflow-y: auto">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #CFCDC4; flex: none"></span>
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div>
+<p style="margin: 0; font-size: 13px; font-weight: 600; color: #5D6259; text-transform: uppercase; letter-spacing: 0.04em">{{ ingDay }}</p>
+<h2 style="margin: 2px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">{{ ingTitle }}</h2>
+</div>
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 22px; background: #E6E4DC; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5D6259">Vælg det, du skal købe. Resten har I hjemme.</p>
+<button onClick="{{ selectAll }}" style="flex: none; min-height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: #E6E4DC; color: #16201B; font-size: 14px; font-weight: 600">Vælg alle</button>
+</div>
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden; flex: none">
+<sc-for list="{{ ingRows }}" as="r" hint-placeholder-count="5">
+<button onClick="{{ r.toggle }}" aria-pressed="{{ r.pressed }}" aria-label="{{ r.label }}" style="width: 100%; min-height: 60px; display: flex; align-items: center; gap: 14px; padding: 8px 16px; box-sizing: border-box; border: 0; border-top: {{ r.border }}; background: transparent; text-align: left; color: #16201B">
+<sc-if value="{{ r.sel }}" hint-placeholder-val="{{ false }}">
+<span aria-hidden="true" style="width: 26px; height: 26px; flex: none; border-radius: 7px; background: {{ accent }}; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+</sc-if>
+<sc-if value="{{ r.unsel }}" hint-placeholder-val="{{ true }}">
+<span aria-hidden="true" style="width: 26px; height: 26px; flex: none; box-sizing: border-box; border-radius: 7px; border: 2px solid #9E9C93"></span>
+</sc-if>
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 500">{{ r.name }}</span>
+<sc-if value="{{ r.hasAlready }}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #5D6259">{{ r.already }}</span></sc-if>
+</span>
+<span style="flex: none; font-size: 16px; font-weight: 700">{{ r.qtyLabel }}</span>
+</button>
+</sc-for>
+</div>
+<button onClick="{{ confirmIng }}" disabled="{{ ingNone }}" style="flex: none; min-height: 54px; border-radius: 14px; border: 0; background: {{ accent }}; color: {{ onAccent }}; font-size: 16px; font-weight: 600; opacity: {{ ingOpacity }}">{{ ingConfirmLabel }}</button>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{ edOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end">
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="position: absolute; inset: 0; border: 0; background: rgba(20, 22, 18, 0.42)"></button>
+<section aria-label="{{ edTitle }}" style="position: relative; height: 790px; box-sizing: border-box; padding: 10px 0 24px; border-radius: 28px 28px 0 0; background: #F2F2ED; display: flex; flex-direction: column; gap: 12px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #CFCDC4; flex: none"></span>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex: none">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">{{ edTitle }}</h2>
+<button onClick="{{ closeSheet }}" aria-label="Luk" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: #E6E4DC; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 4px 20px 12px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="ret-navn" style="font-size: 14px; font-weight: 600; color: #5D6259">Navn på retten</label>
+<input id="ret-navn" type="text" autocomplete="off" value="{{ edName }}" onChange="{{ onEdName }}" placeholder="Fx lasagne" style="height: 52px; box-sizing: border-box; padding: 0 16px; border-radius: 14px; border: 1px solid #DEDDD5; background: #FFFFFF; color: #16201B; font-size: 17px; font-weight: 600; outline: none">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600; color: #5D6259">Ingredienser · {{ edCount }}</h3>
+<sc-if value="{{ edHasRows }}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden">
+<sc-for list="{{ edRows }}" as="r" hint-placeholder-count="3">
+<div style="min-height: 58px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 16px; border-top: {{ r.border }}">
+<span style="flex: 1 1 auto; font-size: 17px; font-weight: 500">{{ r.name }}</span>
+<button onClick="{{ r.dec }}" aria-label="{{ r.decLabel }}" style="width: 44px; height: 44px; border: 1px solid #DEDDD5; border-radius: 22px; background: #FFFFFF; color: #16201B; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span style="min-width: 26px; text-align: center; font-size: 17px; font-weight: 700">{{ r.qty }}</span>
+<button onClick="{{ r.inc }}" aria-label="{{ r.incLabel }}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: {{ accent }}; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ edNoRows }}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; padding: 16px; border-radius: 16px; border: 1px dashed #A9A79E; font-size: 15px; line-height: 1.4; color: #5D6259">Ingen ingredienser endnu. Søg nedenfor og tryk for at tilføje.</p>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="ret-soeg" style="font-size: 14px; font-weight: 600; color: #5D6259">Tilføj ingrediens</label>
+<input id="ret-soeg" type="search" autocomplete="off" value="{{ edQuery }}" onChange="{{ onEdQuery }}" placeholder="Søg i jeres varer" style="height: 52px; box-sizing: border-box; padding: 0 16px; border-radius: 14px; border: 2px solid #16201B; background: #FFFFFF; color: #16201B; font-size: 17px; outline: none">
+</div>
+<sc-if value="{{ edHasResults }}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 0; border-radius: 20px; box-shadow: 0 1px 2px rgba(22, 32, 27, 0.05), 0 6px 20px rgba(22, 32, 27, 0.05); overflow: hidden; flex: none">
+<sc-for list="{{ edResults }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.act }}" aria-label="{{ r.label }}" style="width: 100%; min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border: 0; border-top: {{ r.border }}; background: transparent; text-align: left; color: #16201B">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 17px; font-weight: 500">{{ r.name }}</span><span style="font-size: 13px; color: #5D6259">{{ r.zone }}</span></span>
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: {{ accent }}; color: {{ onAccent }}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ edShowCreate }}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px dashed #A9A79E; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: none">
+<p style="margin: 0; font-size: 17px; font-weight: 600">Ny vare: {{ edPretty }}</p>
+<p style="margin: 0; font-size: 14px; line-height: 1.4; color: #5D6259">Den kommer også i varekataloget. Vælg område på ruten.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{ edZoneChips }}" as="z" hint-placeholder-count="6">
+<button onClick="{{ z.pick }}" style="min-height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid #DEDDD5; background: #F2F2ED; color: #16201B; font-size: 14px; font-weight: 500">{{ z.name }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ edCanDelete }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ deleteRecipe }}" style="align-self: flex-start; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #A3271B; font-size: 15px; font-weight: 600">Slet ret</button>
+</sc-if>
+</div>
+<div style="padding: 0 20px; flex: none">
+<button onClick="{{ saveRecipe }}" disabled="{{ edCantSave }}" style="width: 100%; min-height: 54px; border-radius: 14px; border: 0; background: {{ accent }}; color: {{ onAccent }}; font-size: 16px; font-weight: 600; opacity: {{ edSaveOpacity }}">Gem ret</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startScreen":{"editor":"enum","options":["liste","tilfoej","varer","madplan","ingredienser","retter","nyret"],"default":"liste"},"accent":{"editor":"color","default":"#C6F36B","options":["#C6F36B","#FFB86B","#9FD3FF","#1F6B4A"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(...args) {
+    super(...args);
+    // Gemte data deles mellem alle skærme og overlever genindlæsning; ellers bruges eksempeldata
+    const s = this.load() || this.seed();
+    // Tilstanden følger datamodellen: zones, items, listEntries, recipes (med ingredients), mealPlan
+    this.state = {
+      zones: s.zones,
+      items: s.items,
+      listEntries: s.listEntries,
+      recipes: s.recipes,
+      mealPlan: s.mealPlan,
+      tab: null,
+      sheet: undefined,
+      ingSel: undefined,
+      editor: undefined,
+      query: '',
+      reorder: false,
+      toast: ''
+    };
+    this._seq = 0;
+  }
+
+  seed() {
+    const Zn = (id, name, position) => ({ id: id, name: name, position: position });
+    const I = (id, name, zoneId, purchaseCount) => ({ id: id, name: name, zoneId: zoneId, purchaseCount: purchaseCount });
+    const L = (itemId, quantity, checked) => ({ id: 'le-' + itemId, itemId: itemId, quantity: quantity, checked: !!checked });
+    const R = (id, name, ing) => ({ id: id, name: name, ingredients: ing.map((x) => ({ itemId: x[0], quantity: x[1] })) });
+    const M = (date, label, short, recipeId, added) => ({ id: 'mp-' + date, date: date, label: label, short: short, recipeId: recipeId, ingredientsAddedAt: added ? '2026-11-22T09:12:00Z' : null });
+    return {
+      zones: [
+        Zn('frugt', 'Frugt & grønt', 1), Zn('brod', 'Brød', 2), Zn('mejeri', 'Mejeri', 3), Zn('paalaeg', 'Pålæg', 4),
+        Zn('koel', 'Øvrige kølevarer', 5), Zn('kod', 'Kød & fisk', 6), Zn('kolonial', 'Kolonial', 7), Zn('frost', 'Frost', 8),
+        Zn('drikke', 'Drikkevarer', 9), Zn('hus', 'Husholdning', 10)
+      ],
+      items: [
+        I('bananer', 'Bananer', 'frugt', 25), I('agurk', 'Agurk', 'frugt', 14), I('tomater', 'Tomater', 'frugt', 14),
+        I('aebler', 'Æbler', 'frugt', 9), I('loeg', 'Løg', 'frugt', 10), I('gulerod', 'Gulerødder', 'frugt', 9),
+        I('kartofler', 'Kartofler', 'frugt', 8), I('citron', 'Citroner', 'frugt', 4), I('peber', 'Peberfrugt', 'frugt', 6),
+        I('salat', 'Salat', 'frugt', 5),
+        I('rugbrod', 'Rugbrød', 'brod', 22), I('toast', 'Toastbrød', 'brod', 8), I('boller', 'Boller', 'brod', 5), I('tortilla', 'Tortillas', 'brod', 4),
+        I('maelk', 'Mælk', 'mejeri', 30), I('smoer', 'Smør', 'mejeri', 15), I('ost', 'Ost', 'mejeri', 18), I('yoghurt', 'Yoghurt', 'mejeri', 12),
+        I('creme', 'Creme fraiche', 'mejeri', 5),
+        I('skinke', 'Skinke', 'paalaeg', 8), I('leverpostej', 'Leverpostej', 'paalaeg', 6), I('spegepoelse', 'Spegepølse', 'paalaeg', 4),
+        I('aeg', 'Æg', 'koel', 20), I('hummus', 'Hummus', 'koel', 3), I('friskpasta', 'Frisk pasta', 'koel', 3),
+        I('hakket', 'Hakket oksekød', 'kod', 10), I('kylling', 'Kyllingebryst', 'kod', 7), I('laks', 'Laks', 'kod', 4),
+        I('bacon', 'Bacon', 'kod', 3), I('fars', 'Frikadellefars', 'kod', 3),
+        I('pasta', 'Pasta', 'kolonial', 9), I('ris', 'Ris', 'kolonial', 6), I('havre', 'Havregryn', 'kolonial', 7),
+        I('flaaede', 'Flåede tomater', 'kolonial', 6), I('kaffe', 'Kaffe', 'kolonial', 12), I('karry', 'Karry', 'kolonial', 2),
+        I('kokos', 'Kokosmælk', 'kolonial', 3), I('taco', 'Tacokrydderi', 'kolonial', 3), I('mel', 'Hvedemel', 'kolonial', 2),
+        I('aerter', 'Frosne ærter', 'frost', 4), I('pizza', 'Frossen pizza', 'frost', 4),
+        I('vand', 'Danskvand', 'drikke', 8), I('juice', 'Juice', 'drikke', 5),
+        I('toilet', 'Toiletpapir', 'hus', 6), I('opvask', 'Opvasketabs', 'hus', 3), I('rulle', 'Køkkenrulle', 'hus', 4)
+      ],
+      listEntries: [
+        L('bananer', 1, true), L('agurk', 1, true), L('tomater', 2), L('gulerod', 1), L('peber', 1),
+        L('rugbrod', 1), L('maelk', 2), L('ost', 1), L('aeg', 1),
+        L('hakket', 1), L('kylling', 1), L('pasta', 1), L('flaaede', 2), L('kokos', 1), L('kaffe', 1)
+      ],
+      recipes: [
+        R('kodsovs', 'Pasta med kødsovs', [['hakket', 1], ['pasta', 1], ['flaaede', 2], ['loeg', 1], ['gulerod', 1]]),
+        R('karry', 'Kylling i karry', [['kylling', 1], ['ris', 1], ['karry', 1], ['kokos', 1], ['loeg', 1], ['peber', 1]]),
+        R('tacos', 'Tacos', [['hakket', 1], ['tortilla', 1], ['taco', 1], ['salat', 1], ['tomater', 2], ['agurk', 1], ['creme', 1], ['ost', 1]]),
+        R('laks', 'Laks med kartofler', [['laks', 1], ['kartofler', 1], ['citron', 1], ['salat', 1]]),
+        R('pizza', 'Pizza og salat', [['pizza', 2], ['salat', 1], ['agurk', 1]]),
+        R('frikadeller', 'Frikadeller', [['fars', 1], ['kartofler', 1], ['aeg', 1], ['loeg', 1], ['mel', 1], ['aerter', 1]]),
+        R('suppe', 'Grøntsagssuppe', [['gulerod', 1], ['kartofler', 1], ['loeg', 2], ['boller', 1]])
+      ],
+      mealPlan: [
+        M('2026-11-23', 'Mandag', 'Man 23/11', 'kodsovs', true),
+        M('2026-11-24', 'Tirsdag', 'Tir 24/11', 'karry', true),
+        M('2026-11-25', 'Onsdag', 'Ons 25/11', 'tacos', false),
+        M('2026-11-26', 'Torsdag', 'Tor 26/11', 'laks', false),
+        M('2026-11-27', 'Fredag', 'Fre 27/11', 'pizza', false),
+        M('2026-11-28', 'Lørdag', 'Lør 28/11', null, false),
+        M('2026-11-29', 'Søndag', 'Søn 29/11', null, false)
+      ]
+    };
+  }
+
+  uid(prefix) {
+    this._seq += 1;
+    return prefix + '-' + Date.now().toString(36) + '-' + this._seq;
+  }
+
+  flash(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg });
+    this._t = setTimeout(() => this.setState({ toast: '' }), 2400);
+  }
+
+  storeKey() {
+    return 'indkoebsliste-prototype-v2';
+  }
+
+  dataOf(s) {
+    return { v: 2, zones: s.zones, items: s.items, listEntries: s.listEntries, recipes: s.recipes, mealPlan: s.mealPlan };
+  }
+
+  load() {
+    try {
+      const raw = window.localStorage.getItem(this.storeKey());
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (d && d.v === 2 && Array.isArray(d.items) && Array.isArray(d.recipes)) return d;
+    } catch (e) {}
+    return null;
+  }
+
+  applyRemote(d) {
+    if (!d || d.v !== 2) return;
+    this._remote = true;
+    this.setState({ zones: d.zones, items: d.items, listEntries: d.listEntries, recipes: d.recipes, mealPlan: d.mealPlan });
+  }
+
+  componentDidMount() {
+    try {
+      this._bc = new BroadcastChannel(this.storeKey());
+      this._bc.onmessage = (ev) => this.applyRemote(ev.data);
+    } catch (e) {
+      this._bc = null;
+    }
+    this._onStorage = (ev) => {
+      if (ev.key !== this.storeKey() || !ev.newValue) return;
+      try { this.applyRemote(JSON.parse(ev.newValue)); } catch (e) {}
+    };
+    try { window.addEventListener('storage', this._onStorage); } catch (e) {}
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const keys = ['zones', 'items', 'listEntries', 'recipes', 'mealPlan'];
+    if (!keys.some((k) => prevState[k] !== this.state[k])) return;
+    if (this._remote) {
+      this._remote = false;
+      return;
+    }
+    const d = this.dataOf(this.state);
+    try { window.localStorage.setItem(this.storeKey(), JSON.stringify(d)); } catch (e) {}
+    try { if (this._bc) this._bc.postMessage(d); } catch (e) {}
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t);
+    try { if (this._bc) this._bc.close(); } catch (e) {}
+    try { window.removeEventListener('storage', this._onStorage); } catch (e) {}
+  }
+
+  renderVals() {
+    const st = this.state;
+    const start = this.props.startScreen ?? 'liste';
+    const accent = this.props.accent ?? '#C6F36B';
+    const hex = String(accent).replace('#', '');
+    const lum = hex.length === 6
+      ? (0.299 * parseInt(hex.slice(0, 2), 16) + 0.587 * parseInt(hex.slice(2, 4), 16) + 0.114 * parseInt(hex.slice(4, 6), 16)) / 255
+      : 0.5;
+    const light = lum > 0.6;
+    const onAccent = light ? '#16201B' : '#FFFFFF';
+    const accentText = light ? '#2C6A3F' : accent;
+    const blankEd = { id: null, name: '', ingredients: [], query: '', forDay: null };
+
+    const startTab = { liste: 'liste', tilfoej: 'liste', varer: 'varer', madplan: 'madplan', ingredienser: 'madplan', retter: 'retter', nyret: 'retter' }[start] || 'liste';
+    const tab = st.tab ?? startTab;
+    const initSheet = start === 'tilfoej' ? { type: 'add' } : start === 'ingredienser' ? { type: 'ingredients', day: 2 } : start === 'nyret' ? { type: 'editor' } : null;
+    const sheet = st.sheet !== undefined ? st.sheet : initSheet;
+    const ingSel = st.ingSel !== undefined ? st.ingSel : (start === 'ingredienser' ? { hakket: true, tortilla: true, taco: true, salat: true, creme: true } : {});
+    const ed = st.editor !== undefined ? st.editor : (start === 'nyret'
+      ? { id: null, name: 'Chili con carne', ingredients: [{ itemId: 'hakket', quantity: 1 }, { itemId: 'flaaede', quantity: 2 }, { itemId: 'loeg', quantity: 1 }], query: '', forDay: null }
+      : blankEd);
+
+    const zones = st.zones.slice().sort((a, b) => a.position - b.position);
+    const Z = {};
+    zones.forEach((z) => { Z[z.id] = z.name; });
+    const dots = { frugt: '#6DBE45', brod: '#E0A43A', mejeri: '#7FB3E8', paalaeg: '#E58A8A', koel: '#5FC3B5', kod: '#D2604F', kolonial: '#C9A66B', frost: '#8FA8F0', drikke: '#4FA3D1', hus: '#A889D8' };
+    const spare = ['#F2B84B', '#7CC6A4', '#E79AC3', '#9DB4C0'];
+    const dotOf = (z, k) => dots[z.id] || spare[k % spare.length];
+    const items = st.items;
+    const itemById = {};
+    items.forEach((i) => { itemById[i.id] = i; });
+    const entryByItem = {};
+    st.listEntries.forEach((e) => { entryByItem[e.itemId] = e; });
+    const recipeById = {};
+    st.recipes.forEach((r) => { recipeById[r.id] = r; });
+
+    const rowBorder = (k) => (k === 0 ? 'none' : '1px solid #ECEAE3');
+    const byName = (a, b) => a.name.localeCompare(b.name, 'da');
+    const cap = (t) => (t ? t.charAt(0).toUpperCase() + t.slice(1) : '');
+    const search = (q) => items.filter((i) => i.name.toLowerCase().includes(q)).sort((a, b) => {
+      const as = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+      const bs = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+      return as - bs || b.purchaseCount - a.purchaseCount;
+    });
+
+    // Regler fra datamodellen: én linje pr. vare, antal lægges sammen, under 1 fjernes linjen
+    const addMany = (lines) => this.setState((s) => {
+      const le = s.listEntries.slice();
+      lines.forEach((l) => {
+        const k = le.findIndex((x) => x.itemId === l.itemId);
+        if (k >= 0) le[k] = { ...le[k], quantity: le[k].quantity + l.quantity, checked: false };
+        else le.push({ id: this.uid('le'), itemId: l.itemId, quantity: l.quantity, checked: false });
+      });
+      return { listEntries: le };
+    });
+    const setQty = (itemId, q) => this.setState((s) => (q <= 0
+      ? { listEntries: s.listEntries.filter((x) => x.itemId !== itemId) }
+      : { listEntries: s.listEntries.map((x) => (x.itemId === itemId ? { ...x, quantity: q } : x)) }));
+    const check = (entryId) => () => this.setState((s) => ({ listEntries: s.listEntries.map((x) => (x.id === entryId ? { ...x, checked: !x.checked } : x)) }));
+    const qtyHandlers = (i) => {
+      const e = entryByItem[i.id];
+      const q = e ? e.quantity : 0;
+      return {
+        on: !!e,
+        off: !e,
+        qty: q,
+        add: () => { addMany([{ itemId: i.id, quantity: 1 }]); this.flash(i.name + ' er på listen'); },
+        inc: () => setQty(i.id, q + 1),
+        dec: () => setQty(i.id, q - 1),
+        addLabel: 'Sæt ' + i.name + ' på listen',
+        incLabel: 'Én mere ' + i.name,
+        decLabel: q <= 1 ? 'Fjern ' + i.name + ' fra listen' : 'Én mindre ' + i.name
+      };
+    };
+
+    // Indkøbslisten
+    const lines = st.listEntries.map((e) => ({ e: e, i: itemById[e.itemId] })).filter((x) => x.i);
+    const toBuy = lines.filter((x) => !x.e.checked);
+    const inCart = lines.filter((x) => x.e.checked);
+    const total = lines.length;
+    const pct = total ? Math.round((inCart.length / total) * 100) : 0;
+    const lineRow = (x, k, verb) => ({
+      name: x.i.name,
+      toggle: check(x.e.id),
+      border: rowBorder(k),
+      hasQty: x.e.quantity > 1,
+      qtyLabel: x.e.quantity + ' ×',
+      label: verb + ' ' + (x.e.quantity > 1 ? x.e.quantity + ' ' : '') + x.i.name
+    });
+    const groups = zones.map((z, zk) => {
+      const rows = toBuy.filter((x) => x.i.zoneId === z.id).sort((a, b) => byName(a.i, b.i));
+      return { name: z.name, dot: dotOf(z, zk), count: rows.length, rows: rows.map((x, k) => lineRow(x, k, 'Læg i kurven:')) };
+    }).filter((g) => g.count > 0);
+    const cart = inCart.slice().sort((a, b) => byName(a.i, b.i)).map((x, k) => lineRow(x, k, 'Tag op af kurven:'));
+    const finish = () => {
+      const n = inCart.length;
+      const done = {};
+      inCart.forEach((x) => { done[x.i.id] = true; });
+      const now = new Date().toISOString();
+      this.setState((s) => ({
+        listEntries: s.listEntries.filter((e) => !e.checked),
+        items: s.items.map((i) => (done[i.id] ? { ...i, purchaseCount: i.purchaseCount + 1, lastPurchasedAt: now } : i))
+      }));
+      this.flash(n + (n === 1 ? ' vare' : ' varer') + ' lagt tilbage i kataloget');
+    };
+
+    // Varekatalog og rute
+    const catalog = zones.map((z, zk) => ({
+      name: z.name,
+      dot: dotOf(z, zk),
+      chips: items.filter((i) => i.zoneId === z.id).sort(byName).map((i) => ({ name: i.name, ...qtyHandlers(i) }))
+    })).filter((g) => g.chips.length > 0);
+    const move = (idx, dir) => () => this.setState((s) => {
+      const o = s.zones.slice().sort((a, b) => a.position - b.position);
+      const j = idx + dir;
+      if (j < 0 || j >= o.length) return null;
+      const t = o[idx]; o[idx] = o[j]; o[j] = t;
+      return { zones: o.map((z, k) => ({ ...z, position: k + 1 })) };
+    });
+    const route = zones.map((z, idx) => ({
+      n: idx + 1,
+      name: z.name,
+      border: rowBorder(idx),
+      up: move(idx, -1),
+      down: move(idx, 1),
+      noUp: idx === 0,
+      noDown: idx === zones.length - 1,
+      upOpacity: idx === 0 ? 0.3 : 1,
+      downOpacity: idx === zones.length - 1 ? 0.3 : 1,
+      upLabel: 'Flyt ' + z.name + ' op',
+      downLabel: 'Flyt ' + z.name + ' ned'
+    }));
+
+    // Hurtig tilføjelse
+    const addOpen = !!sheet && sheet.type === 'add';
+    const qRaw = st.query;
+    const q = qRaw.trim().toLowerCase();
+    const results = q ? search(q).slice(0, 6) : [];
+    const exact = items.some((i) => i.name.toLowerCase() === q);
+    const pretty = cap(qRaw.trim());
+    const resultRows = results.map((i, k) => ({ name: i.name, zone: Z[i.zoneId], border: rowBorder(k), ...qtyHandlers(i) }));
+    const suggestions = items.filter((i) => !entryByItem[i.id]).sort((a, b) => b.purchaseCount - a.purchaseCount).slice(0, 10)
+      .map((i) => ({ name: i.name, act: qtyHandlers(i).add, label: 'Tilføj ' + i.name }));
+    const zoneChips = zones.map((z) => ({
+      name: z.name,
+      pick: () => {
+        const it = { id: this.uid('vare'), name: pretty, zoneId: z.id, purchaseCount: 0 };
+        this.setState((s) => ({
+          items: s.items.concat([it]),
+          listEntries: s.listEntries.concat([{ id: this.uid('le'), itemId: it.id, quantity: 1, checked: false }]),
+          query: ''
+        }));
+        this.flash(pretty + ' er oprettet under ' + z.name);
+      }
+    }));
+    const onKey = (e) => {
+      if (e.key === 'Enter' && results.length && !entryByItem[results[0].id]) {
+        qtyHandlers(results[0]).add();
+        this.setState({ query: '' });
+      }
+    };
+
+    // Madplan
+    const ingNamesOf = (r) => r.ingredients.map((x) => itemById[x.itemId]).filter(Boolean).map((i) => i.name).join(', ');
+    const days = st.mealPlan.map((d, idx) => {
+      const r = recipeById[d.recipeId];
+      return {
+        short: d.short,
+        has: !!r,
+        none: !r,
+        dish: r ? r.name : '',
+        ingNames: r ? ingNamesOf(r) : '',
+        added: !!r && !!d.ingredientsAddedAt,
+        notAdded: !!r && !d.ingredientsAddedAt,
+        changeDish: () => this.setState({ sheet: { type: 'pickRecipe', day: idx } }),
+        chooseIng: () => this.setState({ sheet: { type: 'ingredients', day: idx }, ingSel: {} }),
+        changeLabel: 'Skift ret for ' + d.label.toLowerCase(),
+        addLabel: 'Tilføj ret til ' + d.label.toLowerCase()
+      };
+    });
+    const assign = (dayIdx, recipeId) => this.setState((s) => ({
+      mealPlan: s.mealPlan.map((m, k) => (k === dayIdx ? { ...m, recipeId: recipeId, ingredientsAddedAt: null } : m)),
+      sheet: recipeId ? { type: 'ingredients', day: dayIdx } : null,
+      ingSel: {}
+    }));
+
+    // Vælg ret til en dag
+    const pickRecipeOpen = !!sheet && sheet.type === 'pickRecipe';
+    const prDay = pickRecipeOpen ? st.mealPlan[sheet.day] : null;
+    const recipeRows = st.recipes.slice().sort(byName).map((r, k) => ({
+      name: r.name,
+      meta: r.ingredients.length + ' ingredienser',
+      sel: !!prDay && prDay.recipeId === r.id,
+      act: () => assign(sheet.day, r.id),
+      border: rowBorder(k)
+    }));
+
+    // Vælg dag til en ret
+    const pickDayOpen = !!sheet && sheet.type === 'pickDay';
+    const pdRecipe = pickDayOpen ? recipeById[sheet.recipeId] : null;
+    const dayRows = st.mealPlan.map((m, k) => {
+      const cur = recipeById[m.recipeId];
+      return { label: m.label, dish: cur ? cur.name : 'Ledig', dishColor: cur ? '#5D6259' : '#17533A', act: () => assign(k, sheet.recipeId), border: rowBorder(k) };
+    });
+
+    // Vælg ingredienser (aktivt fravalg som udgangspunkt)
+    const ingOpen = !!sheet && sheet.type === 'ingredients';
+    let ingRows = [];
+    let ingTitle = '';
+    let ingDay = '';
+    let chosen = [];
+    let ingRecipe = null;
+    if (ingOpen) {
+      const d = st.mealPlan[sheet.day];
+      ingRecipe = recipeById[d.recipeId];
+      ingDay = d.label;
+      if (ingRecipe) {
+        ingTitle = ingRecipe.name;
+        const valid = ingRecipe.ingredients.filter((x) => itemById[x.itemId]);
+        ingRows = valid.map((x, k) => {
+          const i = itemById[x.itemId];
+          const e = entryByItem[i.id];
+          const sel = !!ingSel[i.id];
+          return {
+            name: i.name,
+            qtyLabel: x.quantity + ' ×',
+            sel: sel,
+            unsel: !sel,
+            pressed: sel ? 'true' : 'false',
+            hasAlready: !!e,
+            already: e ? e.quantity + ' står allerede på listen' : '',
+            toggle: () => this.setState({ ingSel: { ...ingSel, [i.id]: !sel } }),
+            label: (sel ? 'Fravælg ' : 'Vælg ') + i.name,
+            border: rowBorder(k)
+          };
+        });
+        chosen = valid.filter((x) => ingSel[x.itemId]);
+      }
+    }
+    const confirmIng = () => {
+      if (!chosen.length) return;
+      const n = chosen.length;
+      const dayIdx = sheet.day;
+      addMany(chosen.map((x) => ({ itemId: x.itemId, quantity: x.quantity })));
+      this.setState((s) => ({
+        mealPlan: s.mealPlan.map((m, k) => (k === dayIdx ? { ...m, ingredientsAddedAt: new Date().toISOString() } : m)),
+        sheet: null,
+        ingSel: {}
+      }));
+      this.flash(n + (n === 1 ? ' vare' : ' varer') + ' lagt på listen');
+    };
+    const selectAll = () => {
+      const all = {};
+      if (ingRecipe) ingRecipe.ingredients.forEach((x) => { all[x.itemId] = true; });
+      this.setState({ ingSel: all });
+    };
+
+    // Retter
+    const recipeCards = st.recipes.slice().sort(byName).map((r) => {
+      const used = st.mealPlan.filter((m) => m.recipeId === r.id).map((m) => m.label.toLowerCase());
+      return {
+        name: r.name,
+        ingNames: r.ingredients.length + ' ingredienser · ' + ingNamesOf(r),
+        isUsed: used.length > 0,
+        usedLabel: 'På madplanen ' + used.join(' og '),
+        edit: () => this.setState({ sheet: { type: 'editor' }, editor: { id: r.id, name: r.name, ingredients: r.ingredients.map((x) => ({ ...x })), query: '', forDay: null } }),
+        plan: () => this.setState({ sheet: { type: 'pickDay', recipeId: r.id } }),
+        editLabel: 'Rediger ' + r.name,
+        planLabel: 'Sæt ' + r.name + ' på madplanen'
+      };
+    });
+    const newRecipe = () => this.setState({ sheet: { type: 'editor' }, editor: { ...blankEd } });
+    const newRecipeForDay = () => this.setState({ sheet: { type: 'editor' }, editor: { ...blankEd, forDay: pickRecipeOpen ? sheet.day : null } });
+
+    // Ret-editor
+    const edOpen = !!sheet && sheet.type === 'editor';
+    const setEd = (patch) => this.setState({ editor: { ...ed, ...patch } });
+    const edRows = ed.ingredients.filter((x) => itemById[x.itemId]).map((x, k) => {
+      const i = itemById[x.itemId];
+      return {
+        name: i.name,
+        qty: x.quantity,
+        border: rowBorder(k),
+        inc: () => setEd({ ingredients: ed.ingredients.map((y) => (y.itemId === x.itemId ? { ...y, quantity: y.quantity + 1 } : y)) }),
+        dec: () => setEd({ ingredients: x.quantity <= 1 ? ed.ingredients.filter((y) => y.itemId !== x.itemId) : ed.ingredients.map((y) => (y.itemId === x.itemId ? { ...y, quantity: y.quantity - 1 } : y)) }),
+        incLabel: 'Én mere ' + i.name,
+        decLabel: x.quantity <= 1 ? 'Fjern ' + i.name + ' fra retten' : 'Én mindre ' + i.name
+      };
+    });
+    const eqRaw = ed.query || '';
+    const eq = eqRaw.trim().toLowerCase();
+    const inRecipe = {};
+    ed.ingredients.forEach((x) => { inRecipe[x.itemId] = true; });
+    const edResults = eq ? search(eq).filter((i) => !inRecipe[i.id]).slice(0, 5).map((i, k) => ({
+      name: i.name,
+      zone: Z[i.zoneId],
+      border: rowBorder(k),
+      act: () => setEd({ ingredients: ed.ingredients.concat([{ itemId: i.id, quantity: 1 }]), query: '' }),
+      label: 'Tilføj ' + i.name + ' til retten'
+    })) : [];
+    const edExact = items.some((i) => i.name.toLowerCase() === eq);
+    const edPretty = cap(eqRaw.trim());
+    const edZoneChips = zones.map((z) => ({
+      name: z.name,
+      pick: () => {
+        const it = { id: this.uid('vare'), name: edPretty, zoneId: z.id, purchaseCount: 0 };
+        this.setState((s) => ({ items: s.items.concat([it]), editor: { ...ed, ingredients: ed.ingredients.concat([{ itemId: it.id, quantity: 1 }]), query: '' } }));
+      }
+    }));
+    const canSave = ed.name.trim().length > 0 && ed.ingredients.length > 0;
+    const saveRecipe = () => {
+      if (!canSave) return;
+      const id = ed.id || this.uid('ret');
+      const rec = { id: id, name: ed.name.trim(), ingredients: ed.ingredients };
+      const forDay = ed.forDay;
+      this.setState((s) => {
+        const out = {
+          recipes: ed.id ? s.recipes.map((r) => (r.id === id ? rec : r)) : s.recipes.concat([rec]),
+          editor: { ...blankEd }
+        };
+        if (forDay !== null && forDay !== undefined) {
+          out.mealPlan = s.mealPlan.map((m, k) => (k === forDay ? { ...m, recipeId: id, ingredientsAddedAt: null } : m));
+          out.sheet = { type: 'ingredients', day: forDay };
+          out.ingSel = {};
+        } else {
+          out.sheet = null;
+        }
+        return out;
+      });
+      this.flash(rec.name + ' er gemt');
+    };
+    const deleteRecipe = () => {
+      const id = ed.id;
+      const name = ed.name;
+      this.setState((s) => ({
+        recipes: s.recipes.filter((r) => r.id !== id),
+        mealPlan: s.mealPlan.map((m) => (m.recipeId === id ? { ...m, recipeId: null, ingredientsAddedAt: null } : m)),
+        sheet: null,
+        editor: { ...blankEd }
+      }));
+      this.flash(name + ' er slettet');
+    };
+
+    const tabColor = (t) => (tab === t ? onAccent : '#A9B3AC');
+    const tabBg = (t) => (tab === t ? accent : 'transparent');
+    const go = (t) => () => this.setState({ tab: t, reorder: false });
+    const anySheet = !!sheet;
+
+    return {
+      accent: accent,
+      onAccent: onAccent,
+      accentText: accentText,
+      heroLabel: total === 0 ? 'Listen er tom' : inCart.length === total ? 'Alt er i kurven' : 'i kurven',
+      bgListe: tabBg('liste'),
+      bgVarer: tabBg('varer'),
+      bgMadplan: tabBg('madplan'),
+      bgRetter: tabBg('retter'),
+      pct: pct,
+      isListe: tab === 'liste',
+      isVarer: tab === 'varer',
+      isMadplan: tab === 'madplan',
+      isRetter: tab === 'retter',
+      progressLabel: inCart.length + ' af ' + total + ' i kurven',
+      isEmpty: total === 0,
+      groups: groups,
+      hasCart: inCart.length > 0,
+      cartCount: inCart.length,
+      cart: cart,
+      finish: finish,
+      onListCount: total,
+      toggleReorder: () => this.setState((s) => ({ reorder: !s.reorder })),
+      reorderLabel: st.reorder ? 'Færdig' : 'Ret rute',
+      browse: !st.reorder,
+      reorder: st.reorder,
+      catalog: catalog,
+      route: route,
+      days: days,
+      recipeCount: st.recipes.length,
+      newRecipe: newRecipe,
+      recipeCards: recipeCards,
+      goListe: go('liste'),
+      goVarer: go('varer'),
+      goMadplan: go('madplan'),
+      goRetter: go('retter'),
+      cListe: tabColor('liste'),
+      cVarer: tabColor('varer'),
+      cMadplan: tabColor('madplan'),
+      cRetter: tabColor('retter'),
+      hasBadge: toBuy.length > 0,
+      badge: toBuy.length,
+      showFab: !anySheet && (tab === 'liste' || tab === 'varer'),
+      openAdd: () => this.setState({ sheet: { type: 'add' }, query: '' }),
+      hasToast: !!st.toast,
+      toast: st.toast,
+      closeSheet: () => this.setState({ sheet: null, query: '', ingSel: {} }),
+      addOpen: addOpen,
+      query: qRaw,
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      onKey: onKey,
+      hasQuery: !!q,
+      noQuery: !q,
+      hasResults: resultRows.length > 0,
+      resultRows: resultRows,
+      showCreate: !!q && !exact,
+      pretty: pretty,
+      zoneChips: zoneChips,
+      suggestions: suggestions,
+      pickRecipeOpen: pickRecipeOpen,
+      pickRecipeTitle: prDay ? 'Ret til ' + prDay.label.toLowerCase() : '',
+      recipeRows: recipeRows,
+      clearRecipe: () => { if (pickRecipeOpen) assign(sheet.day, null); },
+      newRecipeForDay: newRecipeForDay,
+      pickDayOpen: pickDayOpen,
+      pickDayTitle: pdRecipe ? pdRecipe.name : '',
+      dayRows: dayRows,
+      ingOpen: ingOpen && !!ingRecipe,
+      resetData: () => {
+        const s = this.seed();
+        this.setState({ zones: s.zones, items: s.items, listEntries: s.listEntries, recipes: s.recipes, mealPlan: s.mealPlan, sheet: null, ingSel: {} });
+        this.flash('Eksempeldata er gendannet');
+      },
+      ingDay: ingDay,
+      ingTitle: ingTitle,
+      ingRows: ingRows,
+      selectAll: selectAll,
+      ingNone: chosen.length === 0,
+      ingOpacity: chosen.length === 0 ? 0.4 : 1,
+      ingConfirmLabel: chosen.length === 0 ? 'Vælg det, du skal købe' : 'Læg ' + chosen.length + (chosen.length === 1 ? ' vare' : ' varer') + ' på listen',
+      confirmIng: confirmIng,
+      edOpen: edOpen,
+      edTitle: ed.id ? 'Rediger ret' : 'Ny ret',
+      edName: ed.name,
+      onEdName: (e) => setEd({ name: e.target.value }),
+      edCount: ed.ingredients.length,
+      edHasRows: edRows.length > 0,
+      edNoRows: edRows.length === 0,
+      edRows: edRows,
+      edQuery: eqRaw,
+      onEdQuery: (e) => setEd({ query: e.target.value }),
+      edHasResults: edResults.length > 0,
+      edResults: edResults,
+      edShowCreate: !!eq && !edExact,
+      edPretty: edPretty,
+      edZoneChips: edZoneChips,
+      edCanDelete: !!ed.id,
+      deleteRecipe: deleteRecipe,
+      saveRecipe: saveRecipe,
+      edCantSave: !canSave,
+      edSaveOpacity: canSave ? 1 : 0.4
+    };
+  }
+}
+</script>
+</body>
+</html>
