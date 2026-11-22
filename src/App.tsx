@@ -1,44 +1,43 @@
-import { useLiveQuery } from 'dexie-react-hooks';
-import { db, isActive } from './data/db';
-import { sortZones } from './domain/views';
-import { zoneColor } from './data/zoneColors';
+import { Plus } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { useListEntries } from './data/hooks';
+import { AddItemSheet } from './screens/AddItemSheet';
+import { ListScreen } from './screens/ListScreen';
+import { Placeholder } from './screens/Placeholder';
+import { Nav, type Tab } from './ui/Nav';
+import { ToastProvider } from './ui/toast';
 
-// Midlertidig skærm for milepæl 2: viser, at databasen er seedet.
-// Afløses af Liste og Tilføj vare i milepæl 3.
+type SheetState = { type: 'add' } | null;
+
 export function App() {
-  const data = useLiveQuery(async () => {
-    const [zones, items, recipes] = await Promise.all([
-      db.zones.toArray(),
-      db.items.toArray(),
-      db.recipes.toArray(),
-    ]);
-    return { zones: sortZones(zones), items: items.filter(isActive), recipes: recipes.filter(isActive) };
-  });
+  const [tab, setTab] = useState<Tab>('liste');
+  const [sheet, setSheet] = useState<SheetState>(null);
+  const entries = useListEntries();
+  const missing = entries?.filter((e) => !e.checked).length ?? 0;
+  const closeSheet = useCallback(() => setSheet(null), []);
+
+  const changeTab = (next: Tab) => {
+    setTab(next);
+    window.scrollTo({ top: 0 });
+  };
 
   return (
-    <main className="screen">
-      <p className="eyebrow">Netto</p>
-      <h1 className="title">Indkøb</h1>
-      <section className="card" aria-live="polite">
-        {!data ? (
-          <p>Indlæser …</p>
-        ) : (
-          <>
-            <p>
-              Databasen er klar: {data.zones.length} områder, {data.items.length} varer og {data.recipes.length} retter.
-            </p>
-            <ul className="zones">
-              {data.zones.map((z, k) => (
-                <li key={z.id}>
-                  <span className="dot" style={{ background: zoneColor(z.id, k) }} aria-hidden="true" />
-                  {z.name}
-                  <span className="muted"> · {data.items.filter((i) => i.zoneId === z.id).length}</span>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </section>
-    </main>
+    <ToastProvider>
+      {tab === 'liste' && <ListScreen />}
+      {tab === 'varer' && <Placeholder title="Varer" milestone={4} />}
+      {tab === 'madplan' && <Placeholder title="Madplan" milestone={6} />}
+      {tab === 'retter' && <Placeholder title="Retter" milestone={5} />}
+
+      {!sheet && (tab === 'liste' || tab === 'varer') && (
+        <button type="button" className="fab" onClick={() => setSheet({ type: 'add' })}>
+          <Plus size={22} strokeWidth={2.6} aria-hidden="true" />
+          Tilføj
+        </button>
+      )}
+
+      <Nav tab={tab} onChange={changeTab} badge={missing} />
+
+      {sheet?.type === 'add' && <AddItemSheet onClose={closeSheet} />}
+    </ToastProvider>
   );
 }
